@@ -47,8 +47,9 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-const logoutButton=document.getElementById('logout');
-const myalbumButton=document.getElementById('myalbum');
+const logoutButton = document.getElementById('logout');
+const myalbumButton = document.getElementById('myalbum');
+const friendButton = document.getElementById('friends')
 
 logoutButton.addEventListener('click', ()=>{
     localStorage.removeItem('loggedInUserId');
@@ -63,4 +64,8 @@ logoutButton.addEventListener('click', ()=>{
 
 myalbumButton.addEventListener('click', ()=>{
     window.location.href='/myalbum/myalbum.html'
+})
+
+friendButton.addEventListener('click', ()=>{
+    window.location.href='/friends/friends.html'
 })

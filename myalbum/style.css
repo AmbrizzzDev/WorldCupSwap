@@ -112,7 +112,7 @@ input[type="number"] {
 }
 
 .sticker {
-    aspect-ratio: 1;
+    aspect-ratio: .8; 
     background-color: #ffffff;
     border: 3px solid #000000;
     border-radius: 8px;
@@ -125,6 +125,7 @@ input[type="number"] {
     position: relative;
     box-shadow: 4px 4px 0px #000000;
     transition: transform 0.2s;
+    min-height: auto; 
 }
 
 .sticker.owned {

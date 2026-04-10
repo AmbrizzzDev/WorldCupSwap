@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,15 +14,21 @@
     <link rel="stylesheet" href="style.css">
     <script type="module" src="myalbum.js" defer></script>
 </head>
+
 <body>
     <nav class="navbar">
-        <div class="logo"><span1>World</span1><span2>Cup</span2><span3>Swap</span3></div>
-        <button id="backBtn">Back</button>
+        <div class="logo">
+            <span class="logo-completo"> <span1>World</span1><span2>Cup</span2><span3>Swap</span3>
+            </span>
+            <span class="logo-siglas"><span1>W</span1><span2>C</span2><span3>S</span3></span>
+        </div>
+        <button id="backBtn">Volver</button>
     </nav>
     <main class="container">
         <section class="hero" style="padding: 20px; margin-bottom: 20px;">
             <h1>Mi Album</h1>
-            <div style="display: flex; justify-content: center; gap: 30px; font-size: 1.2rem; font-weight: bold; margin-top: 15px;">
+            <div
+                style="display: flex; justify-content: center; gap: 30px; font-size: 1.2rem; font-weight: bold; margin-top: 15px;">
                 <span style="color: #7bad49;">Obtenidas: <span id="ownedCount">0</span></span>
                 <span style="color: #db1718;">Faltantes: <span id="missingCount">980</span></span>
             </div>
@@ -42,7 +49,7 @@
                 <input type="number" id="quickRemoveInput" min="1" max="980" inputmode="numeric" pattern="[0-9]*">
                 <button id="quickRemoveBtn" style="background: #db1718;">Quitar</button>
             </div>
-            
+
             <div class="control-group filters">
                 <button id="filterAll" class="filter-btn active">Todos</button>
                 <button id="filterOwned" class="filter-btn">Obtenidas</button>
@@ -54,4 +61,5 @@
         <div id="stickerGrid" class="sticker-grid"></div>
     </main>
 </body>
+
 </html>

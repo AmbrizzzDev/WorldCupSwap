@@ -26,33 +26,83 @@ input[type="number"] {
     width: 80px;
 }
 
+/* Contenedor de filtros: quitamos bordes pesados */
 .filters {
     width: 100%;
     display: flex;
     justify-content: center;
-    gap: 15px;
-    margin-top: 10px;
-    padding-top: 20px;
-    border-top: 2px dashed #cccccc;
-    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
+/* Botón base: Casi invisible */
 .filter-btn {
-    background: #ffffff;
+    background: transparent;
+    color: #555555;
+    border: 1px solid rgba(0, 0, 0, 0.2); /* Borde muy fino */
+    padding: 6px 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    border-radius: 4px;
+    box-shadow: none;
+}
+
+/* Al pasar el mouse: se revela un poco más */
+.filter-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
     color: #000000;
-    border: 3px solid #000000;
-    opacity: 0.5;
-    padding: 8px 20px;
+    border-color: #000000;
+}
+
+/* Botón ACTIVO: Sutil pero claro */
+.filter-btn.active {
+    background: rgba(0, 0, 0, 0.8); /* Fondo oscuro pero sólido */
+    color: #ffffff;
+    border-color: #000000;
+}
+
+/* Botón Volver: Menos agresivo */
+#backBtn {
+    background: #000000;
+    color: white;
+    padding: 10px 20px;
     font-weight: bold;
     text-transform: uppercase;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s;
+    border-radius: 4px;
+    max-width: fit-content;
 }
 
-.filter-btn.active {
-    opacity: 1;
-    background: #000000;
-    color: #ffffff;
+#backBtn:hover {
+    background: #2a2a2a;
+    color: white;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    #backBtn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .filters {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* 2x2 para que no estorben */
+        gap: 8px;
+    }
+
+    .filter-btn {
+        width: 100%;
+        padding: 10px 5px;
+        font-size: 0.7rem;
+    }
 }
 
 .sticker-grid {

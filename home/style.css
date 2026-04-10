@@ -5,10 +5,11 @@ body {
     background-image: url('../images/back.png');
     background-size: cover;
     background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed; 
     color: #000000;
     min-height: 100vh;
 }
-
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -16,6 +17,7 @@ body {
     padding: 20px;
     background: #ffffff;
     border-bottom: 4px solid #000000;
+    
 }
 
 .logo {
@@ -44,6 +46,7 @@ button {
     font-weight: bold;
     text-transform: uppercase;
     cursor: pointer;
+    border-radius: 4px;
 }
 
 .container {
@@ -114,5 +117,63 @@ button {
     .sticker {
         font-size: 1rem;
         border-width: 2px;
+    }
+}
+
+
+/* 1. Logo Responsive */
+.hero h1 {
+    font-size: clamp(1.5rem, 8vw, 2.5rem); /* Se ajusta entre 1.5 y 2.5 rem según el dispositivo */
+    text-align: center;
+    width: 100%;
+    margin-bottom: 10px;
+    word-wrap: break-word; /* Evita que se salga de la pantalla */
+}
+
+/* --- Lógica del Logo Responsive --- */
+
+/* Por defecto ocultamos las siglas */
+.logo-siglas {
+    display: none;
+}
+
+/* Mostramos el logo completo */
+.logo-completo {
+    display: inline-flex;
+}
+
+/* --- Media Query para Móviles --- */
+@media (max-width: 374px) {
+    /* 1. Intercambio de logos */
+    .logo-completo {
+        display: none;
+    }
+    
+    .logo-siglas {
+        display: inline;
+        font-weight: 900;
+        font-size: 1.5rem;
+    }
+
+    /* 2. Ajuste de la Navbar para que no se encime nada */
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 15px;
+        flex-wrap: nowrap; /* Evita que salten de línea */
+    }
+
+    .logo {
+        flex-shrink: 0; /* El logo no se encoge */
+        margin-right: 10px;
+    }
+
+    #backBtn {
+        /* El botón se queda compacto a la derecha */
+        width: auto;
+        padding: 5px 12px;
+        font-size: 0.85rem;
+        margin: 0;
     }
 }

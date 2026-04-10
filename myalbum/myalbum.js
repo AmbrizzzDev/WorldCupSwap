@@ -165,26 +165,27 @@ async function removeSticker(stickerId) {
 }
 
 const searchInput = document.getElementById('searchInput');
-let searchTimeout = null;
 
 searchInput.addEventListener('input', (e) => {
-    const num = e.target.value;
-    document.querySelectorAll('.sticker.highlight').forEach(el => el.classList.remove('highlight'));
+    const value = e.target.value;
+    
+    for (let i = 1; i <= totalStickers; i++) {
+        const stickerId = i.toString();
+        const div = document.getElementById(`sticker-${stickerId}`);
+        
+        if (!div) continue;
 
-    if (searchTimeout) clearTimeout(searchTimeout);
-
-    searchTimeout = setTimeout(() => {
-        if (num >= 1 && num <= totalStickers) {
-            const el = document.getElementById(`sticker-${num}`);
-            if (el) {
-                if (el.style.display === 'none') {
-                    applyFilter('all');
-                }
-                el.classList.add('highlight');
-                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (value === "") {
+            const count = userStickers[stickerId] || 0;
+            updateVisibility(div, count);
+        } else {
+            if (stickerId === value) {
+                div.style.display = 'flex';
+            } else {
+                div.style.display = 'none';
             }
         }
-    }, 400);
+    }
 });
 
 const quickAddInput = document.getElementById('quickAddInput');

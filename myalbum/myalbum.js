@@ -20,7 +20,7 @@ let syncTimeout = null;
 let currentFilter = 'all';
 
 document.getElementById('backBtn').addEventListener('click', () => {
-    window.location.href = '../home/home.html';
+    window.location.href = '../home/index.html';
 });
 
 async function loadAlbum() {

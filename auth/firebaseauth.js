@@ -91,7 +91,7 @@ signIn.addEventListener('click', (event) => {
       showMessage('Log in is successful', 'signInMessage');
       const user = userCredential.user;
       localStorage.setItem('loggedInUserId', user.uid);
-      window.location.href = '/home/home.html';
+      window.location.href = '/home/index.html';
     })
     .catch((error) => {
       const errorCode = error.code;

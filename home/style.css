@@ -1,0 +1,118 @@
+body {
+    margin: 0;
+    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+        "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+    background-image: url('../images/back.png');
+    background-size: cover;
+    background-position: center;
+    color: #000000;
+    min-height: 100vh;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: #ffffff;
+    border-bottom: 4px solid #000000;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+.logo span1 {
+    color: #7bad49;
+}
+
+.logo span2 {
+    color: #1c7c85;
+}
+
+.logo span3 {
+    color: #db1718;
+}
+
+button {
+    background: #000000;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.hero {
+    background: #ffffff;
+    padding: 40px;
+    border: 4px solid #000000;
+    box-shadow: 8px 8px 0px #000000;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    margin: 0 0 10px 0;
+    text-transform: uppercase;
+}
+
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+}
+
+.card {
+    border: 4px solid #000000;
+    box-shadow: 8px 8px 0px #000000;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.bg-purple { background: #128957; color: white; }
+.bg-green { background: #0a2f52; color: white; }
+.bg-orange { background: #da1718; color: white; }
+
+.card h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+    .controls {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 15px;
+        gap: 15px;
+    }
+    .control-group {
+        width: 100%;
+        justify-content: space-between;
+    }
+    input[type="number"] {
+        flex-grow: 1;
+        max-width: 120px;
+    }
+    .sticker-grid {
+        grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
+        gap: 8px;
+    }
+    .sticker {
+        font-size: 1rem;
+        border-width: 2px;
+    }
+}

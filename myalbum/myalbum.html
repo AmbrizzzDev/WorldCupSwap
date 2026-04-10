@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorldCupSwap</title>
+    <script>
+        if (!localStorage.getItem('loggedInUserId')) {
+            window.location.replace('../auth/index.html');
+        }
+    </script>
+    <link rel="stylesheet" href="../home/style.css">
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="myalbum.js" defer></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo"><span1>World</span1><span2>Cup</span2><span3>Swap</span3></div>
+        <button id="backBtn">Back</button>
+    </nav>
+    <main class="container">
+        <section class="hero" style="padding: 20px; margin-bottom: 20px;">
+            <h1>Mi Album</h1>
+            <div style="display: flex; justify-content: center; gap: 30px; font-size: 1.2rem; font-weight: bold; margin-top: 15px;">
+                <span style="color: #7bad49;">Obtenidas: <span id="ownedCount">0</span></span>
+                <span style="color: #db1718;">Faltantes: <span id="missingCount">980</span></span>
+            </div>
+        </section>
+
+        <section class="controls">
+            <div class="control-group">
+                <label for="searchInput">Buscar:</label>
+                <input type="number" id="searchInput" min="1" max="980" inputmode="numeric" pattern="[0-9]*">
+            </div>
+            <div class="control-group">
+                <label for="quickAddInput">Agregar:</label>
+                <input type="number" id="quickAddInput" min="1" max="980" inputmode="numeric" pattern="[0-9]*">
+                <button id="quickAddBtn">Añadir</button>
+            </div>
+            <div class="control-group">
+                <label for="quickRemoveInput">Quitar:</label>
+                <input type="number" id="quickRemoveInput" min="1" max="980" inputmode="numeric" pattern="[0-9]*">
+                <button id="quickRemoveBtn" style="background: #db1718;">Quitar</button>
+            </div>
+            
+            <div class="control-group filters">
+                <button id="filterAll" class="filter-btn active">Todos</button>
+                <button id="filterOwned" class="filter-btn">Obtenidas</button>
+                <button id="filterMissing" class="filter-btn">Faltantes</button>
+                <button id="filterExtras" class="filter-btn">Sobrantes</button>
+            </div>
+        </section>
+
+        <div id="stickerGrid" class="sticker-grid"></div>
+    </main>
+</body>
+</html>

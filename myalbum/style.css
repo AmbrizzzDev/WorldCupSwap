@@ -1,0 +1,162 @@
+.controls {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 20px;
+    background: #ffffff;
+    padding: 20px;
+    border: 4px solid #000000;
+    box-shadow: 8px 8px 0px #000000;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+}
+
+input[type="number"] {
+    padding: 8px;
+    border: 3px solid #000000;
+    font-size: 1rem;
+    font-weight: bold;
+    width: 80px;
+}
+
+.filters {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+    padding-top: 20px;
+    border-top: 2px dashed #cccccc;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    background: #ffffff;
+    color: #000000;
+    border: 3px solid #000000;
+    opacity: 0.5;
+    padding: 8px 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filter-btn.active {
+    opacity: 1;
+    background: #000000;
+    color: #ffffff;
+}
+
+.sticker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    gap: 12px;
+}
+
+.sticker {
+    aspect-ratio: 1;
+    background-color: #ffffff;
+    border: 3px solid #000000;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 1.2rem;
+    cursor: pointer;
+    position: relative;
+    box-shadow: 4px 4px 0px #000000;
+    transition: transform 0.2s;
+}
+
+.sticker.owned {
+    background-color: #7bad49;
+    color: #ffffff;
+}
+
+.sticker.highlight {
+    border-color: #db1718;
+    box-shadow: 0 0 15px #db1718;
+    transform: scale(1.15);
+    z-index: 10;
+}
+
+.badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: #db1718;
+    color: #ffffff;
+    font-size: 0.8rem;
+    font-weight: bold;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #000000;
+}
+
+@media (max-width: 768px) {
+    .controls {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 15px;
+        gap: 15px;
+        box-shadow: 4px 4px 0px #000000;
+    }
+    
+    .control-group {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .control-group label {
+        flex-shrink: 0;
+        font-size: 0.9rem;
+    }
+
+    input[type="number"] {
+        flex-grow: 1;
+        max-width: 50%;
+    }
+
+    .filters {
+        justify-content: space-between;
+        gap: 8px;
+    }
+
+    .filter-btn {
+        flex: 1;
+        padding: 10px 5px;
+        font-size: 0.8rem;
+    }
+
+    .sticker-grid {
+        grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
+        gap: 8px;
+    }
+
+    .sticker {
+        font-size: 1rem;
+        border-width: 2px;
+        box-shadow: 2px 2px 0px #000000;
+    }
+    
+    .badge {
+        width: 20px;
+        height: 20px;
+        font-size: 0.7rem;
+        top: -5px;
+        right: -5px;
+    }
+}

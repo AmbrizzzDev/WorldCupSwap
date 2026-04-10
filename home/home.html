@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorldCupSwap</title>
+    <script>
+        if (!localStorage.getItem('loggedInUserId')) {
+            window.location.replace('../auth/index.html');
+        }
+    </script>
+    <script type="module" src="home.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <span1>World</span1><span2>Cup</span2><span3>Swap</span3>
+        </div>
+        <button id="logout">Log out</button>
+    </nav>
+
+    <main class="container">
+        <section class="hero">
+            <h1>Bienvenido <span id="loggedUsersUsername"></span></h1>
+            <p>Registra, intercambia, y completa tu colección 2026.</p>
+        </section>
+
+        <section class="features">
+            <div id="myalbum" class="card bg-purple">
+                <h2>Mi Album</h2>
+            </div>
+            <div class="card bg-green">
+                <h2>Amigos</h2>
+            </div>
+            <div class="card bg-orange">
+                <h2>Comunidad</h2>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>

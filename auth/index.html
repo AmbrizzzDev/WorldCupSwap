@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WorldCupSwap</title>
+    <script src="firebaseauth.js" type="module"></script>
+    <script src="auth.js" defer></script>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="login">
+        <div class="form-container">
+            <p class="title">Welcome back</p>
+            <form class="form">
+                <div id="signInMessage" class="messageDiv" style="display: none"></div>
+                <input required type="email" class="input" id="email" placeholder="Email" />
+                <input required type="password" class="input" id="password" placeholder="Password" />
+                <p class="page-link">
+                    <span class="page-link-label">Forgot Password?</span>
+                </p>
+                <button class="form-btn" id="submitLogin">Log in</button>
+            </form>
+            <p class="sign-up-label">
+                Don't have an account?<span class="sign-up-link">Sign up</span>
+            </p>
+        </div>
+    </div>
+
+    <div class="signup hidden">
+        <div class="form-container">
+            <p class="title">Create your account</p>
+            <form class="form">
+                <div id="signUpMessage" class="messageDiv" style="display: none"></div>
+                <input required type="text" class="input" id="sUsername" placeholder="Username" />
+                <input required type="email" class="input" id="sEmail" placeholder="Email" />
+                <input required type="password" class="input" id="sPassword" placeholder="Password" />
+                <p class="page-link">
+                    <span class="page-link-label">Forgot Password?</span>
+                </p>
+                <button class="form-btn" id="submitSignup">Sign up</button>
+            </form>
+            <p class="sign-up-label">
+                Already have an account?<span class="log-in-link">Log in</span>
+            </p>
+        </div>
+    </div>
+</body>
+
+</html>

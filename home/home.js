@@ -21,7 +21,7 @@ const db = getFirestore();
 onAuthStateChanged(auth, (user) => {
     if (!user) {
         localStorage.removeItem('loggedInUserId');
-        window.location.replace('../auth/index.html');
+        window.location.replace('/auth/index.html');
         return;
     }
 
@@ -54,7 +54,7 @@ logoutButton.addEventListener('click', ()=>{
     localStorage.removeItem('loggedInUserId');
     signOut(auth)
     .then(()=>{
-        window.location.href='../auth/index.html'
+        window.location.href='/auth/index.html'
     })
     .catch((error)=>{
         console.error('Error Signing out:', error)
@@ -62,5 +62,5 @@ logoutButton.addEventListener('click', ()=>{
 })
 
 myalbumButton.addEventListener('click', ()=>{
-    window.location.href='../myalbum/myalbum.html'
+    window.location.href='/myalbum/myalbum.html'
 })

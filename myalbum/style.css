@@ -249,5 +249,6 @@ input[type="number"] {
         top: 70px;
         font-size: 0.8rem;
         padding: 6px 20px;
+        margin-top: 10px;
     }
 }

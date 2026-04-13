@@ -12,7 +12,6 @@ const firebaseConfig = {
     measurementId: "G-1LT2367QC0",
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth();
@@ -51,21 +50,21 @@ const logoutButton = document.getElementById('logout');
 const myalbumButton = document.getElementById('myalbum');
 const friendButton = document.getElementById('friends')
 
-logoutButton.addEventListener('click', ()=>{
+logoutButton.addEventListener('click', () => {
     localStorage.removeItem('loggedInUserId');
     signOut(auth)
-    .then(()=>{
-        window.location.href='/auth/index.html'
-    })
-    .catch((error)=>{
-        console.error('Error Signing out:', error)
-    })
+        .then(() => {
+            window.location.href = '/auth/index.html'
+        })
+        .catch((error) => {
+            console.error('Error Signing out:', error)
+        })
 })
 
-myalbumButton.addEventListener('click', ()=>{
-    window.location.href='/myalbum/myalbum.html'
+myalbumButton.addEventListener('click', () => {
+    window.location.href = '/myalbum/myalbum.html'
 })
 
-friendButton.addEventListener('click', ()=>{
-    window.location.href='/friends/friends.html'
+friendButton.addEventListener('click', () => {
+    window.location.href = '/friends/friends.html'
 })

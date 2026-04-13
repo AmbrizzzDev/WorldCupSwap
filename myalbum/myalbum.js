@@ -65,7 +65,7 @@ function renderGrid() {
         div.addEventListener('click', () => updateSticker(stickerId));
         fragment.appendChild(div);
     }
-    
+
     grid.appendChild(fragment);
     updateCounters();
     applyFilter(currentFilter);
@@ -85,7 +85,7 @@ function updateVisibility(div, count) {
 
 function applyFilter(filter) {
     currentFilter = filter;
-    
+
     document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
     if (filter === 'all') document.getElementById('filterAll').classList.add('active');
     if (filter === 'owned') document.getElementById('filterOwned').classList.add('active');
@@ -168,11 +168,11 @@ const searchInput = document.getElementById('searchInput');
 
 searchInput.addEventListener('input', (e) => {
     const value = e.target.value;
-    
+
     for (let i = 1; i <= totalStickers; i++) {
         const stickerId = i.toString();
         const div = document.getElementById(`sticker-${stickerId}`);
-        
+
         if (!div) continue;
 
         if (value === "") {
@@ -224,7 +224,7 @@ quickRemoveInput.addEventListener('keypress', (e) => {
 
 const topBtn = document.getElementById("scrollToTopBtn");
 
-window.onscroll = function() {
+window.onscroll = function () {
     if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
         topBtn.style.display = "block";
     } else {

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>WorldCupSwap</title>
+    <link rel="stylesheet" href="/home/style.css">
+    <link rel="stylesheet" href="swap.css">
+    <script type="module" src="swap.js" defer></script>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <span class="logo-completo">
+                <span1>World</span1>
+                <span2>Cup</span2>
+                <span3>Swap</span3>
+            </span>
+            <span class="logo-siglas">WCS</span>
+        </div>
+        <button id="backBtn">VOLVER</button>
+    </nav>
+
+    <main class="container">
+        <section class="hero" style="padding: 20px; margin-bottom: 20px;">
+            <h1>Intercambiar</h1>
+        </section>
+
+        <section class="controls">
+            <div class="search-group">
+                <label for="swapSearchInput">BUSCAR:</label>
+                <input type="number" id="swapSearchInput" min="1" max="980" placeholder="Núm.">
+            </div>
+        </section>
+
+        <div class="swap-container">
+            <div class="swap-panel">
+                <h2>Yo le doy (Mis cartas)</h2>
+                <div class="panel-filters">
+                    <button id="giveFilterMatch" class="filter-btn active">Le Faltan</button>
+                    <button id="giveFilterAll" class="filter-btn">Mis Repetidas</button>
+                    <button id="giveFilterObtained" class="filter-btn">Todas</button>
+                </div>
+                <div id="giveGrid" class="sticker-grid"></div>
+            </div>
+            <div class="swap-panel">
+                <h2>Él me da (Sus cartas)</h2>
+                <div class="panel-filters">
+                    <button id="receiveFilterMatch" class="filter-btn active">Me Faltan</button>
+                    <button id="receiveFilterAll" class="filter-btn">Sus Repetidas</button>
+                    <button id="receiveFilterObtained" class="filter-btn">Todas</button>
+                </div>
+                <div id="receiveGrid" class="sticker-grid"></div>
+            </div>
+        </div>
+
+        <div class="trade-action">
+            <button id="confirmTradeBtn" disabled>CONFIRMAR INTERCAMBIO</button>
+        </div>
+    </main>
+</body>
+
+</html>

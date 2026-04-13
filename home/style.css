@@ -10,7 +10,7 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('../images/back.png'); 
+    background-image: url('../images/back.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -19,7 +19,7 @@ body::before {
 }
 
 .navbar {
-    position: sticky; /* O 'fixed' si quieres que ignore el flujo del diseño */
+    position: sticky;
     top: 0;
     left: 0;
     z-index: 1000;
@@ -29,7 +29,6 @@ body::before {
     padding: 20px;
     background: #ffffff;
     border-bottom: 4px solid #000000;
-    
 }
 
 .logo {
@@ -95,11 +94,26 @@ button {
     text-align: center;
     cursor: pointer;
     border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
-.bg-purple { background: #128957; color: white; }
-.bg-green { background: #0a2f52; color: white; }
-.bg-orange { background: #da1718; color: white; }
+.bg-purple {
+    background: #128957;
+    color: white;
+}
+
+.bg-green {
+    background: #0a2f52;
+    color: white;
+}
+
+.bg-orange {
+    background: #da1718;
+    color: white;
+}
 
 .card h2 {
     margin: 0;
@@ -114,78 +128,110 @@ button {
         padding: 15px;
         gap: 15px;
     }
+
     .control-group {
         width: 100%;
         justify-content: space-between;
     }
+
     input[type="number"] {
         flex-grow: 1;
         max-width: 120px;
     }
+
     .sticker-grid {
         grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
         gap: 8px;
     }
+
     .sticker {
         font-size: 1rem;
         border-width: 2px;
     }
 }
 
-
-/* 1. Logo Responsive */
 .hero h1 {
-    font-size: clamp(1.5rem, 8vw, 2.5rem); /* Se ajusta entre 1.5 y 2.5 rem según el dispositivo */
+    font-size: clamp(1.5rem, 8vw, 2.5rem);
     text-align: center;
     width: 100%;
     margin-bottom: 10px;
-    word-wrap: break-word; /* Evita que se salga de la pantalla */
+    word-wrap: break-word;
 }
 
-/* --- Lógica del Logo Responsive --- */
-
-/* Por defecto ocultamos las siglas */
 .logo-siglas {
     display: none;
 }
 
-/* Mostramos el logo completo */
 .logo-completo {
     display: inline-flex;
 }
 
-/* --- Media Query para Móviles --- */
 @media (max-width: 374px) {
-    /* 1. Intercambio de logos */
+
     .logo-completo {
         display: none;
     }
-    
+
     .logo-siglas {
         display: inline;
         font-weight: 900;
         font-size: 1.5rem;
     }
 
-    /* 2. Ajuste de la Navbar para que no se encime nada */
     .navbar {
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 10px 15px;
-        flex-wrap: nowrap; /* Evita que salten de línea */
+        flex-wrap: nowrap;
     }
 
     .logo {
-        flex-shrink: 0; /* El logo no se encoge */
+        flex-shrink: 0;
         margin-right: 10px;
     }
 
     #backBtn {
-        /* El botón se queda compacto a la derecha */
         width: auto;
         padding: 5px 12px;
         font-size: 0.85rem;
         margin: 0;
     }
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+}
+
+.notif-wrapper {
+    position: relative;
+    cursor: pointer;
+    font-size: 1.4rem;
+    background: white;
+    padding: 5px 8px;
+    border: 3px solid #000;
+    box-shadow: 4px 4px 0px #000;
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s;
+}
+
+.notif-wrapper:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px #000;
+}
+
+.badge {
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    background: #db1718;
+    color: white;
+    border: 2px solid #000;
+    border-radius: 50%;
+    padding: 2px 7px;
+    font-size: 0.7rem;
+    font-weight: 900;
+    display: none; 
 }

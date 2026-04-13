@@ -1,11 +1,63 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>WorldCupSwap</title>
+    <link rel="stylesheet" href="/home/style.css">
+    <link rel="stylesheet" href="friends.css">
+    <script type="module" src="friends.js" defer></script>
 </head>
+
 <body>
-    
+    <nav class="navbar">
+    <div class="logo">
+        <span class="logo-completo"><span1>World</span1><span2>Cup</span2><span3>Swap</span3></span>
+        <span class="logo-siglas">WCS</span>
+    </div>
+    <div class="nav-actions" style="display: flex; align-items: center; gap: 15px;">
+        <div id="notifBtn" class="notif-wrapper">
+            <span class="notif-icon">📩</span>
+            <span id="notifBadge" class="badge">0</span>
+        </div>
+        <button id="backBtn">Volver</button>
+    </div>
+</nav>
+
+    <main class="container">
+        <section class="hero" style="padding: 20px; margin-bottom: 20px;">
+            <h1>Mis Amigos</h1>
+        </section>
+        <div class="header-section">
+            <button id="openModalBtn" class="add-main-btn">+ AÑADIR AMIGO</button>
+        </div>
+        <div id="friendsGrid" class="friends-grid"></div>
+    </main>
+
+    <div id="searchModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h2>BUSCAR USUARIO</h2>
+                <button id="closeModalBtn">&times;</button>
+            </div>
+            <div class="search-form">
+                <input type="text" id="searchInput" placeholder="Username o email...">
+                <button id="doSearchBtn">BUSCAR</button>
+            </div>
+            <div id="searchResults" class="results-list"></div>
+        </div>
+    </div>
+
+    <div id="tradeModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h2>SOLICITUDES</h2>
+                <button id="closeTradeModalBtn">&times;</button>
+            </div>
+            <div id="requestsList" class="results-list"></div>
+        </div>
+    </div>
 </body>
+
 </html>

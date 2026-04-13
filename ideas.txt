@@ -3,3 +3,5 @@ Crear un sitio web con autentificacion para los stickers del album del mundial d
 estampas que tenga (o solo las repetidas), y pueda agregar a amigos para saber cuales tienes extras que le sirvan
 a tu amigo y viceversa, tambien habra una seccion llamada "comunidad" donde sera como una red social donde salgan
 post de otra gente de tu cuidad pidiendo intercambiar y hacer juntadas.
+
+- Cuando salga el diseño del album cambiar el layout, y añadir un diseño especial a cada grupo de stciker

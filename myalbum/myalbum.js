@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, collection, query, where, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyBvQZbiFjhjWJXRxbhiP_dwdtbcAHU9qLg",
@@ -19,9 +19,86 @@ let userStickers = {};
 let syncTimeout = null;
 let currentFilter = 'all';
 
+const tradeModal = document.getElementById('tradeModal');
+const requestsList = document.getElementById('requestsList');
+const notifBadge = document.getElementById('notifBadge');
+
 document.getElementById('backBtn').addEventListener('click', () => {
     window.location.href = '/home/home.html';
 });
+
+document.getElementById('notifBtn').onclick = () => tradeModal.style.display = 'flex';
+document.getElementById('closeTradeModalBtn').onclick = () => tradeModal.style.display = 'none';
+
+const qTrades = query(collection(db, "trades"), where("receiverId", "==", userId), where("status", "==", "pending"));
+
+onSnapshot(qTrades, (snapshot) => {
+    notifBadge.innerText = snapshot.size;
+    notifBadge.style.display = snapshot.size > 0 ? 'block' : 'none';
+    requestsList.innerHTML = snapshot.empty ? '<p style="text-align:center; padding: 20px;">No hay solicitudes pendientes.</p>' : '';
+
+    snapshot.forEach(async (tradeDoc) => {
+        const trade = tradeDoc.data();
+        const senderSnap = await getDoc(doc(db, "users", trade.senderId));
+        const senderName = senderSnap.exists() ? senderSnap.data().username : "Usuario";
+
+        const div = document.createElement('div');
+        div.className = 'trade-request-item';
+        div.innerHTML = `
+            <p><strong>De:</strong> ${senderName}</p>
+            <p style="color: #7bad49"><strong>Te da:</strong> ${trade.give.join(', ')}</p>
+            <p style="color: #003366"><strong>Le das:</strong> ${trade.receive.join(', ')}</p>
+            <div class="trade-btn-group">
+                <button class="accept-btn" onclick="handleTrade('${tradeDoc.id}', 'accept')">ACEPTAR</button>
+                <button class="reject-btn" onclick="handleTrade('${tradeDoc.id}', 'reject')">RECHAZAR</button>
+            </div>
+        `;
+        requestsList.appendChild(div);
+    });
+});
+
+window.handleTrade = async (tradeId, action) => {
+    const tradeRef = doc(db, "trades", tradeId);
+    if (action === 'reject') {
+        if (confirm("¿Rechazar solicitud?")) await updateDoc(tradeRef, { status: 'rejected' });
+        return;
+    }
+
+    if (!confirm("¿Aceptar intercambio? Se actualizarán los álbumes.")) return;
+
+    try {
+        const tradeSnap = await getDoc(tradeRef);
+        const trade = tradeSnap.data();
+        const myAlbumRef = doc(db, "albums", userId);
+        const friendAlbumRef = doc(db, "albums", trade.senderId);
+
+        const [myAlb, frAlb] = await Promise.all([getDoc(myAlbumRef), getDoc(friendAlbumRef)]);
+        let myStickersData = myAlb.data().stickers;
+        let frStickersData = frAlb.data().stickers;
+
+        trade.give.forEach(id => {
+            frStickersData[id] = (frStickersData[id] || 0) - 1;
+            myStickersData[id] = (myStickersData[id] || 0) + 1;
+        });
+
+        trade.receive.forEach(id => {
+            myStickersData[id] = (myStickersData[id] || 0) - 1;
+            frStickersData[id] = (frStickersData[id] || 0) + 1;
+        });
+
+        await Promise.all([
+            updateDoc(myAlbumRef, { stickers: myStickersData }),
+            updateDoc(friendAlbumRef, { stickers: frStickersData }),
+            updateDoc(tradeRef, { status: 'accepted' })
+        ]);
+        
+        userStickers = myStickersData;
+        renderGrid();
+        alert("¡Intercambio completado!");
+    } catch (e) {
+        alert("Error al procesar el intercambio.");
+    }
+};
 
 async function loadAlbum() {
     const docRef = doc(db, "albums", userId);
@@ -57,7 +134,7 @@ function renderGrid() {
 
         if (count > 1) {
             const badge = document.createElement('div');
-            badge.className = 'badge';
+            badge.className = 'sticker-badge';
             badge.innerText = `x${count}`;
             div.appendChild(badge);
         }
@@ -115,11 +192,12 @@ function updateStickerUI(stickerId, count) {
         div.classList.remove('owned');
     }
 
-    let badge = div.querySelector('.badge');
+    // Cambia el selector aquí también
+    let badge = div.querySelector('.sticker-badge'); 
     if (count > 1) {
         if (!badge) {
             badge = document.createElement('div');
-            badge.className = 'badge';
+            badge.className = 'sticker-badge'; // Cambiado
             div.appendChild(badge);
         }
         badge.innerText = `x${count}`;

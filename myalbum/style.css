@@ -140,22 +140,28 @@ input[type="number"] {
     z-index: 10;
 }
 
-.badge {
+.sticker-badge {
     position: absolute;
     top: -10px;
     right: -10px;
-    background-color: #db1718;
-    color: #ffffff;
-    font-size: 0.8rem;
-    font-weight: bold;
+    background: #db1718;
+    color: white;
+    border: 2px solid #000;
+    border-radius: 50%;
+    
     width: 24px;
     height: 24px;
-    border-radius: 50%;
+    padding: 0;
+    
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 2px solid #000000;
+    
+    font-size: 0.75rem;
+    font-weight: 900;
+    z-index: 5;
 }
+
 
 @media (max-width: 768px) {
     .controls {
@@ -203,7 +209,7 @@ input[type="number"] {
         box-shadow: 2px 2px 0px #000000;
     }
     
-    .badge {
+    .sticker-badge {
         width: 20px;
         height: 20px;
         font-size: 0.7rem;

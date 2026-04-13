@@ -225,7 +225,7 @@ quickRemoveInput.addEventListener('keypress', (e) => {
 const topBtn = document.getElementById("scrollToTopBtn");
 
 window.onscroll = function() {
-    if (document.body.scrollTop > 400 || document.documentElement.scrollTop > 400) {
+    if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
         topBtn.style.display = "block";
     } else {
         topBtn.style.display = "none";

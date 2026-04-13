@@ -211,3 +211,43 @@ input[type="number"] {
         right: -5px;
     }
 }
+
+#scrollToTopBtn {
+    display: none; /* Se activa con el JS */
+    position: fixed;
+    top: 80px; /* Justo debajo de la Navbar */
+    left: 50%;
+    transform: translateX(-50%); /* Centrado perfecto */
+    z-index: 999; 
+    
+    /* Estilo Glassmorphism */
+    background: rgba(255, 255, 255, 0.2); /* Blanco muy transparente */
+    backdrop-filter: blur(10px); /* El efecto de vidrio */
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    
+    /* Forma Ovalada */
+    padding: 8px 25px;
+    border-radius: 50px; /* Forma de píldora */
+    
+    color: #000;
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+#scrollToTopBtn:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: translateX(-50%) translateY(-2px);
+}
+
+/* En móvil bajamos un poco más para que no tape el logo */
+@media (max-width: 768px) {
+    #scrollToTopBtn {
+        top: 70px;
+        font-size: 0.8rem;
+        padding: 6px 20px;
+    }
+}

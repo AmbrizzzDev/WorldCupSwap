@@ -222,4 +222,21 @@ quickRemoveInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') handleQuickRemove();
 });
 
+const topBtn = document.getElementById("scrollToTopBtn");
+
+window.onscroll = function() {
+    if (document.body.scrollTop > 400 || document.documentElement.scrollTop > 400) {
+        topBtn.style.display = "block";
+    } else {
+        topBtn.style.display = "none";
+    }
+};
+
+topBtn.addEventListener("click", () => {
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+});
+
 loadAlbum();

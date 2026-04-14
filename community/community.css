@@ -119,9 +119,10 @@
 @media (max-width: 768px) {
     .chat-wrapper {
         padding: 15px 10px;
-        height: 75vh;
+        height: 60vh;
+        min-height: 350px;
         border-width: 3px;
-    }
+    } 
 
     .chat-msg {
         max-width: 90%;
@@ -152,7 +153,8 @@
 
 @media (max-width: 480px) {
     .chat-wrapper {
-        height: 80vh;
+        height: 50vh;
+        min-height: 300px;
         border-width: 2px;
     }
 

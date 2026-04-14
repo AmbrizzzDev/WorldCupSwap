@@ -164,40 +164,70 @@ async function removeFriendReciprocal(friendId) {
     } catch (e) { alert("No se pudo eliminar al amigo."); }
 }
 
+const CACHE_KEY = `friends_cache_${myId}`;
+
+function renderFriendsList(friendsData, grid) {
+    grid.innerHTML = '';
+    if (friendsData.length === 0) {
+        grid.innerHTML = `<div class="empty-msg"><p>¡Estás muy solo!</p></div>`;
+        return;
+    }
+
+    friendsData.forEach(friend => {
+        const card = document.createElement('div');
+        card.className = 'friend-card';
+        card.innerHTML = `
+            <div class="friend-avatar">${friend.name.charAt(0).toUpperCase()}</div>
+            <div style="font-weight:900; text-transform:uppercase; margin-bottom:10px;">${friend.name}</div>
+            <button class="swap-friend-btn" data-id="${friend.id}">Intercambiar</button>
+            <button class="delete-friend-btn" data-id="${friend.id}">Eliminar</button>
+        `;
+        grid.appendChild(card);
+    });
+
+    document.querySelectorAll('.swap-friend-btn').forEach(btn => {
+        btn.onclick = (e) => { window.location.href = `../swap/swap.html?friendId=${e.target.dataset.id}`; };
+    });
+    document.querySelectorAll('.delete-friend-btn').forEach(btn => {
+        btn.onclick = (e) => removeFriendReciprocal(e.target.dataset.id);
+    });
+}
+
 async function loadFriends() {
     const grid = document.getElementById('friendsGrid');
-    grid.innerHTML = '<div class="empty-msg">Cargando amigos...</div>';
+    const cachedFriends = localStorage.getItem(CACHE_KEY);
+    
+    if (cachedFriends) {
+        renderFriendsList(JSON.parse(cachedFriends), grid);
+    } else {
+        grid.innerHTML = '<div class="empty-msg">Cargando amigos...</div>';
+    }
+
     try {
         const myDoc = await getDoc(doc(db, "users", myId));
         if (myDoc.exists() && myDoc.data().friends && myDoc.data().friends.length > 0) {
             const ids = myDoc.data().friends;
-            grid.innerHTML = '';
+            const friendsData = [];
+            
             for (const id of ids) {
                 const fDoc = await getDoc(doc(db, "users", id));
                 if (fDoc.exists()) {
-                    const data = fDoc.data();
-                    const name = data.username || 'Usuario';
-                    const card = document.createElement('div');
-                    card.className = 'friend-card';
-                    card.innerHTML = `
-                        <div class="friend-avatar">${name.charAt(0).toUpperCase()}</div>
-                        <div style="font-weight:900; text-transform:uppercase; margin-bottom:10px;">${name}</div>
-                        <button class="swap-friend-btn" data-id="${id}">Intercambiar</button>
-                        <button class="delete-friend-btn" data-id="${id}">Eliminar</button>
-                    `;
-                    grid.appendChild(card);
+                    friendsData.push({ id: id, name: fDoc.data().username || 'Usuario' });
                 }
             }
-            document.querySelectorAll('.swap-friend-btn').forEach(btn => {
-                btn.onclick = (e) => { window.location.href = `../swap/swap.html?friendId=${e.target.dataset.id}`; };
-            });
-            document.querySelectorAll('.delete-friend-btn').forEach(btn => {
-                btn.onclick = (e) => removeFriendReciprocal(e.target.dataset.id);
-            });
+            
+            localStorage.setItem(CACHE_KEY, JSON.stringify(friendsData));
+            renderFriendsList(friendsData, grid);
+            
         } else {
+            localStorage.removeItem(CACHE_KEY);
             grid.innerHTML = `<div class="empty-msg"><p>¡Estás muy solo!</p></div>`;
         }
-    } catch (error) { grid.innerHTML = '<div class="empty-msg">Error al cargar amigos</div>'; }
+    } catch (error) { 
+        if (!cachedFriends) {
+            grid.innerHTML = '<div class="empty-msg">Error al cargar amigos</div>'; 
+        }
+    }
 }
 
 loadFriends();

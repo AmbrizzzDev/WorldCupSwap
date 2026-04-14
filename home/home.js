@@ -24,15 +24,23 @@ const notifBadge = document.getElementById('notifBadge');
 onAuthStateChanged(auth, (user) => {
     if (!user) {
         localStorage.removeItem('loggedInUserId');
+        localStorage.removeItem('myUsername');
         window.location.replace('/auth/index.html');
         return;
     }
 
     if (myId) {
+        const cachedUsername = localStorage.getItem('myUsername');
+        if (cachedUsername) {
+            document.getElementById("loggedUsersUsername").innerText = cachedUsername;
+        }
+
         const docRef = doc(db, "users", myId);
         getDoc(docRef).then((docSnap) => {
             if (docSnap.exists()) {
-                document.getElementById("loggedUsersUsername").innerText = docSnap.data().username;
+                const freshUsername = docSnap.data().username;
+                document.getElementById("loggedUsersUsername").innerText = freshUsername;
+                localStorage.setItem('myUsername', freshUsername);
             }
         });
 
@@ -109,6 +117,7 @@ document.getElementById('closeTradeModalBtn').onclick = () => tradeModal.style.d
 
 document.getElementById('logout').addEventListener('click', () => {
     localStorage.removeItem('loggedInUserId');
+    localStorage.removeItem('myUsername');
     signOut(auth).then(() => window.location.href = '/auth/index.html');
 });
 

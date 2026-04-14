@@ -1,0 +1,115 @@
+.chat-wrapper {
+    background: #ffffff;
+    border: 4px solid #000000;
+    box-shadow: 8px 8px 0px #000000;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    max-height: 65vh;
+}
+
+.chat-messages {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding-right: 15px;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.chat-msg {
+    display: flex;
+    flex-direction: column;
+    max-width: 75%;
+}
+
+.chat-msg:not(.me) {
+    align-self: flex-start;
+}
+
+.chat-msg.me {
+    align-self: flex-end;
+    align-items: flex-end;
+}
+
+.msg-sender {
+    font-size: 0.85rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    color: #000000;
+}
+
+.msg-text {
+    padding: 10px 15px;
+    font-size: 1rem;
+    line-height: 1.4;
+    word-wrap: break-word;
+    border: 3px solid #000000;
+    box-shadow: 4px 4px 0px #000000;
+    border-radius: 18px;
+}
+
+.chat-msg:not(.me) .msg-text {
+    background: #ffffff;
+    color: #000000;
+    border-bottom-left-radius: 4px;
+}
+
+.chat-msg.me .msg-text {
+    background: #1c7c85;
+    color: #ffffff;
+    border-bottom-right-radius: 4px;
+}
+
+.chat-inputs {
+    display: flex;
+    gap: 15px;
+}
+
+#chatInput {
+    flex-grow: 1;
+    padding: 12px 20px;
+    border: 3px solid #000000;
+    border-radius: 25px;
+    font-size: 1rem;
+    outline: none;
+    transition: box-shadow 0.2s;
+}
+
+#chatInput:focus {
+    box-shadow: 4px 4px 0px #7bad49;
+}
+
+#sendBtn {
+    background: #db1718 !important;
+    color: #ffffff !important;
+    border: 3px solid #000000 !important;
+    box-shadow: 4px 4px 0px #000000 !important;
+    padding: 10px 25px;
+    border-radius: 25px;
+    font-weight: 900;
+    font-size: 1rem;
+    text-transform: uppercase;
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+
+#sendBtn:active {
+    transform: translate(4px, 4px);
+    box-shadow: 0px 0px 0px #000000 !important;
+}
+
+.chat-messages::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: transparent;
+    border-left: 2px solid #000000;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: #000000;
+}

@@ -114,3 +114,4 @@ document.getElementById('logout').addEventListener('click', () => {
 
 document.getElementById('myalbum').addEventListener('click', () => window.location.href = '/myalbum/myalbum.html');
 document.getElementById('friends').addEventListener('click', () => window.location.href = '/friends/friends.html');
+document.getElementById('community').addEventListener('click', () => window.location.href = '/community/community.html')

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorldCupSwap</title>
+    <script>
+        if (!localStorage.getItem('loggedInUserId')) {
+            window.location.replace('/auth/index.html');
+        }
+    </script>
+    <link rel="stylesheet" href="/home/style.css">
+    <link rel="stylesheet" href="community.css">
+    <script type="module" src="community.js" defer></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <span class="logo-completo"> <span1>World</span1><span2>Cup</span2><span3>Swap</span3></span>
+            <span class="logo-siglas"><span1>W</span1><span2>C</span2><span3>S</span3></span>
+        </div>
+        <div class="nav-actions">
+            <button id="backBtn">Volver</button>
+        </div>
+    </nav>
+    <main class="container">
+        <section class="hero" style="padding: 20px; margin-bottom: 20px;">
+            <h1>Comunidad</h1>
+        </section>
+
+        <section class="chat-wrapper controls">
+            <div id="chatMessages" class="chat-messages"></div>
+            <div class="chat-inputs">
+                <input type="text" id="chatInput" placeholder="Escribe un mensaje...">
+                <button id="sendBtn" style="background: #db1718; color: white;">Enviar</button>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

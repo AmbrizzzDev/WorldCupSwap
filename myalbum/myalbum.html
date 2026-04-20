@@ -19,9 +19,12 @@
 <body>
     <nav class="navbar">
         <div class="logo">
-            <span class="logo-completo"> <span1>World</span1><span2>Cup</span2><span3>Swap</span3>
+            <span class="logo-completo">
+                <span1>World</span1><span2>Cup</span2><span3>Swap</span3>
             </span>
-            <span class="logo-siglas"><span1>W</span1><span2>C</span2><span3>S</span3></span>
+            <span class="logo-siglas">
+                <span1>W</span1><span2>C</span2><span3>S</span3>
+            </span>
         </div>
         <div class="nav-actions" style="display: flex; align-items: center; gap: 15px;">
             <div id="notifBtn" class="notif-wrapper">
@@ -32,10 +35,9 @@
         </div>
     </nav>
     <main class="container">
-        <section class="hero" style="padding: 20px; margin-bottom: 20px;">
+        <section class="hero">
             <h1>Mi Album</h1>
-            <div
-                style="display: flex; justify-content: center; gap: 30px; font-size: 1.2rem; font-weight: bold; margin-top: 15px;">
+            <div class="stats-container">
                 <span style="color: #7bad49;">Obtenidas: <span id="ownedCount">0</span></span>
                 <span style="color: #db1718;">Faltantes: <span id="missingCount">980</span></span>
             </div>
@@ -44,17 +46,17 @@
         <section class="controls">
             <div class="control-group">
                 <label for="searchInput">Buscar:</label>
-                <input type="number" id="searchInput" min="1" max="980" inputmode="numeric" pattern="[0-9]*">
+                <input type="text" id="searchInput" placeholder="Ej. MEX 1">
             </div>
             <div class="control-group">
                 <label for="quickAddInput">Agregar:</label>
-                <input type="number" id="quickAddInput" min="1" max="980" inputmode="numeric" pattern="[0-9]*">
-                <button id="quickAddBtn">Añadir</button>
+                <input type="text" id="quickAddInput" placeholder="Ej. POR 9">
+                <button id="quickAddBtn" class="btn-success">Añadir</button>
             </div>
             <div class="control-group">
                 <label for="quickRemoveInput">Quitar:</label>
-                <input type="number" id="quickRemoveInput" min="1" max="980" inputmode="numeric" pattern="[0-9]*">
-                <button id="quickRemoveBtn" style="background: #db1718;">Quitar</button>
+                <input type="text" id="quickRemoveInput" placeholder="Ej. KOR 5">
+                <button id="quickRemoveBtn" class="btn-danger">Quitar</button>
             </div>
 
             <div class="control-group filters">
@@ -65,9 +67,18 @@
             </div>
         </section>
 
-        <div id="stickerGrid" class="sticker-grid"></div>
+        <div class="album-container">
+            <section class="pagination">
+                <button id="prevPageBtn">◄ Anterior</button>
+                <h2 id="pageTitle">FWC</h2>
+                <button id="nextPageBtn">Siguiente ►</button>
+            </section>
+
+            <div class="album-page">
+                <div id="stickerGrid" class="sticker-grid"></div>
+            </div>
     </main>
-    <button id="scrollToTopBtn">Ir arriba ↑</button>
+    <button id="scrollToTopBtn">↑</button>
 
     <div id="tradeModal" class="modal-overlay">
         <div class="modal-box">
@@ -76,6 +87,23 @@
                 <button id="closeTradeModalBtn">&times;</button>
             </div>
             <div id="requestsList" class="results-list"></div>
+        </div>
+    </div>
+
+    <div id="tutorialModal" class="tutorial-overlay">
+        <div class="tutorial-box">
+            <h2 id="tutorialTitle">Paso 1</h2>
+            <div class="tutorial-image-container">
+                <img id="tutorialImage" src="img1.jpg" alt="Tutorial">
+            </div>
+            <div class="tutorial-text-content">
+                <p id="tutorialText"></p>
+            </div>
+            <div class="tutorial-controls">
+                <button id="prevTutorialBtn" class="btn-nav">◄ Atrás</button>
+                <button id="nextTutorialBtn" class="btn-nav">Siguiente ►</button>
+                <button id="closeTutorialBtn" class="btn-finish" style="display: none;">¡ENTENDIDO!</button>
+            </div>
         </div>
     </div>
 </body>

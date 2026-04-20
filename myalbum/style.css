@@ -1,6 +1,6 @@
 .controls {
     display: flex;
-    gap: 30px;
+    gap: 0px 30px;
     margin-bottom: 20px;
     background: #ffffff;
     padding: 20px;
@@ -18,7 +18,7 @@
     font-weight: bold;
 }
 
-input[type="number"] {
+input[type="text"] {
     padding: 8px;
     border: 3px solid #000000;
     font-size: 1rem;
@@ -110,58 +110,115 @@ input[type="number"] {
     grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
     gap: 12px;
 }
+.album-container {
+    background: #f8f9fa;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid #e0e0e0;
+}
+
+.team-flag {
+    height: 1em;
+    vertical-align: middle;
+    margin-right: 15px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.pagination h2 {
+    color: #0d1b2a;
+    font-size: 2.5rem;
+    margin: 0;
+    font-weight: 900;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pagination button {
+    background: #0d1b2a;
+    color: white;
+    font-size: 0.9rem;
+    padding: 10px 20px;
+    border-radius: 50px;
+}
+
+.pagination button:disabled {
+    background: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.sticker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 15px;
+}
 
 .sticker {
-    aspect-ratio: .75; 
-    background-color: #ffffff;
-    border: 3px solid #000000;
+    aspect-ratio: 0.75;
+    background: #ffffff;
+    border: 2px dashed #bdc3c7;
     border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 900;
-    font-size: 1.2rem;
+    font-weight: 800;
+    font-size: 1rem;
+    color: #bdc3c7;
     cursor: pointer;
     position: relative;
-    box-shadow: 4px 4px 0px #000000;
-    transition: transform 0.2s;
-    min-height: auto; 
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.sticker:hover {
+    border-color: #7f8c8d;
+    color: #7f8c8d;
 }
 
 .sticker.owned {
-    background-color: #7bad49;
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+    border: none;
     color: #ffffff;
+    box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4);
+    transform: translateY(-2px);
 }
 
-.sticker.highlight {
-    border-color: #db1718;
-    box-shadow: 0 0 15px #db1718;
-    transform: scale(1.15);
-    z-index: 10;
+.sticker.owned:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(17, 153, 142, 0.6);
 }
 
 .sticker-badge {
     position: absolute;
-    top: -10px;
-    right: -10px;
-    background: #db1718;
+    top: -8px;
+    right: -8px;
+    background: #ff4d4d;
     color: white;
-    border: 2px solid #000;
     border-radius: 50%;
-    
     width: 24px;
     height: 24px;
-    padding: 0;
-    
     display: flex;
     align-items: center;
     justify-content: center;
-    
     font-size: 0.75rem;
     font-weight: 900;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     z-index: 5;
 }
-
 
 @media (max-width: 768px) {
     .controls {
@@ -169,52 +226,88 @@ input[type="number"] {
         align-items: stretch;
         padding: 15px;
         gap: 15px;
-        box-shadow: 4px 4px 0px #000000;
     }
-    
+
     .control-group {
+        flex-wrap: nowrap;
         width: 100%;
-        justify-content: space-between;
+        gap: 10px;
+        justify-content: flex-start;
     }
 
     .control-group label {
-        flex-shrink: 0;
-        font-size: 0.9rem;
+        width: auto;
+        text-align: left;
+        margin-bottom: 0;
     }
 
-    input[type="number"] {
-        flex-grow: 1;
-        max-width: 50%;
+    input[type="text"] {
+        flex-grow: 0;
+        width: 90px;
+    }
+
+    .control-group button {
+        margin-left: auto;
     }
 
     .filters {
-        justify-content: space-between;
-        gap: 8px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
     }
 
     .filter-btn {
+        width: 100%;
+        padding: 12px 5px;
+        font-size: 0.75rem;
+    }
+
+    .album-container {
+        padding: 15px;
+    }
+
+    .pagination {
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 15px;
+        padding-bottom: 15px;
+    }
+
+    .pagination h2 {
+        width: 100%;
+        order: -1; 
+        font-size: 1.8rem;
+        margin-bottom: 5px;
+    }
+
+    .pagination button {
         flex: 1;
         padding: 10px 5px;
         font-size: 0.8rem;
+        margin: 0 5px;
     }
 
+    .pagination button:first-of-type { margin-left: 0; }
+    .pagination button:last-of-type { margin-right: 0; }
+
     .sticker-grid {
-        grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
         gap: 8px;
     }
 
     .sticker {
-        font-size: 1rem;
-        border-width: 2px;
-        box-shadow: 2px 2px 0px #000000;
+        font-size: 0.85rem;
     }
-    
-    .sticker-badge {
-        width: 20px;
-        height: 20px;
-        font-size: 0.7rem;
-        top: -5px;
-        right: -5px;
+
+    #scrollToTopBtn {
+        bottom: 15px;
+        right: 15px;
+        padding: 12px 18px;
+    }
+
+    #backBtn {
+        width: 100%;
+        text-align: center;
     }
 }
 
@@ -240,11 +333,155 @@ input[type="number"] {
     color: #fff;
 }
 
-/* En móvil lo hacemos un poco más grande para el pulgar */
-@media (max-width: 768px) {
-    #scrollToTopBtn {
-        bottom: 15px;
-        right: 15px;
-        padding: 12px 18px;
+.tutorial-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(13, 27, 42, 0.9); /* Azul muy oscuro traslúcido */
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    backdrop-filter: blur(5px);
+}
+
+.tutorial-box {
+    background: #ffffff;
+    border: 4px solid #000000;
+    box-shadow: 12px 12px 0px #000000;
+    padding: 25px;
+    max-width: 450px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#tutorialTitle {
+    color: #db1718;
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    text-align: center;
+    border-bottom: 3px solid #f0f0f0;
+    padding-bottom: 10px;
+}
+
+.tutorial-image-container {
+    width: 100%;
+    background: #f8f9fa;
+    border: 2px solid #000;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#tutorialImage {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.tutorial-text-content {
+    font-size: 1.1rem;
+    line-height: 1.4;
+    color: #333;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+}
+
+#tutorialText b {
+    color: #db1718;
+}
+
+.tutorial-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-nav {
+    background: #000000;
+    color: #ffffff;
+    border: none;
+    padding: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    flex: 1;
+    transition: background 0.2s;
+}
+
+.btn-nav:hover:not(:disabled) {
+    background: #333;
+}
+
+.btn-nav:disabled {
+    opacity: 0.2;
+    cursor: not-allowed;
+}
+
+.btn-finish {
+    background: #7bad49;
+    color: white;
+    border: none;
+    padding: 12px;
+    font-weight: 900;
+    cursor: pointer;
+    flex: 2;
+    box-shadow: 4px 4px 0px #000;
+}
+
+.btn-finish:hover {
+    background: #6a963f;
+}
+
+@media (max-width: 610px) {
+    .tutorial-overlay {
+        padding: 10px;
+    }
+
+    .tutorial-box {
+        padding: 15px;
+        box-shadow: 4px 4px 0px #000000;
+        border-width: 3px;
+        gap: 12px;
+        max-height: 90vh;
+        overflow-y: auto;
+        margin-right: 10px;
+    }
+
+    #tutorialTitle {
+        font-size: 1.2rem;
+        padding-bottom: 5px;
+    }
+
+    .tutorial-image-container {
+        max-height: 35vh;
+    }
+
+    #tutorialImage {
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    .tutorial-text-content {
+        font-size: 0.95rem;
+        min-height: auto;
+    }
+
+    .tutorial-controls {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .btn-nav, .btn-finish {
+        width: 100%;
+        padding: 12px;
+        font-size: 0.9rem;
     }
 }

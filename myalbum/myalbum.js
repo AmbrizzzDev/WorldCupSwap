@@ -14,7 +14,43 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore();
 const userId = localStorage.getItem('loggedInUserId');
-const totalStickers = 980;
+const storageKey = `stickers_${userId}`;
+
+const countryNames = {
+    "FWC": "FIFA World Cup", "MEX": "México", "RSA": "Sudáfrica", "KOR": "Corea del Sur", 
+    "CZE": "Rep. Checa", "CAN": "Canadá", "BIH": "Bosnia", "QAT": "Qatar", "SUI": "Suiza", 
+    "BRA": "Brasil", "MAR": "Marruecos", "HAI": "Haití", "SCO": "Escocia", "USA": "Estados Unidos", 
+    "PAR": "Paraguay", "AUS": "Australia", "TUR": "Turquía", "GER": "Alemania", "CUW": "Curazao", 
+    "CIV": "Costa de Marfil", "ECU": "Ecuador", "NED": "Países Bajos", "JPN": "Japón", "SWE": "Suecia", 
+    "TUN": "Túnez", "BEL": "Bélgica", "EGY": "Egipto", "IRN": "Irán", "NZL": "Nueva Zelanda", 
+    "ESP": "España", "CPV": "Cabo Verde", "KSA": "Arabia Saudita", "URU": "Uruguay", "FRA": "Francia", 
+    "SEN": "Senegal", "IRQ": "Irak", "NOR": "Noruega", "ARG": "Argentina", "ALG": "Argelia", 
+    "AUT": "Austria", "JOR": "Jordania", "POR": "Portugal", "COD": "RD Congo", "UZB": "Uzbekistán", 
+    "COL": "Colombia", "ENG": "Inglaterra", "CRO": "Croacia", "GHA": "Ghana", "PAN": "Panamá", "CC": "Coca-Cola Collection"
+};
+const teams = ["MEX ", "RSA ", "KOR ", "CZE ", "CAN ", "BIH ", "QAT ", "SUI ", "BRA ", "MAR ", "HAI ", "SCO ", "USA ", "PAR ", "AUS ", "TUR ", "GER ", "CUW ", "CIV ", "ECU ", "NED ", "JPN ", "SWE ", "TUN ", "BEL ", "EGY ", "IRN ", "NZL ", "ESP ", "CPV ", "KSA ", "URU ", "FRA ", "SEN ", "IRQ ", "NOR ", "ARG ", "ALG ", "AUT ", "JOR ", "POR ", "COD ", "UZB ", "COL ", "ENG ", "CRO ", "GHA ", "PAN "];
+const pages = ["FWC", ...teams, "CC"];
+let currentPageIndex = 0;
+
+const stickerIds = [];
+
+pages.forEach(page => {
+    if (page === "CC") {
+        for (let i = 1; i <= 14; i++) {
+            stickerIds.push(`${page}${i}`);
+        }
+    } else if (page === "FWC") {
+        for (let i = 1; i <= 6; i++) {
+            stickerIds.push(`${page}${i}`);
+        }
+    } else {
+        for (let i = 1; i <= 20; i++) {
+            stickerIds.push(`${page}${i}`);
+        }
+    }
+});
+
+const totalStickers = stickerIds.length;
 let userStickers = {};
 let syncTimeout = null;
 let currentFilter = 'all';
@@ -22,6 +58,9 @@ let currentFilter = 'all';
 const tradeModal = document.getElementById('tradeModal');
 const requestsList = document.getElementById('requestsList');
 const notifBadge = document.getElementById('notifBadge');
+const pageTitle = document.getElementById('pageTitle');
+const prevPageBtn = document.getElementById('prevPageBtn');
+const nextPageBtn = document.getElementById('nextPageBtn');
 
 document.getElementById('backBtn').addEventListener('click', () => {
     window.location.href = '/home/home.html';
@@ -93,6 +132,7 @@ window.handleTrade = async (tradeId, action) => {
         ]);
         
         userStickers = myStickersData;
+        localStorage.setItem(storageKey, JSON.stringify(userStickers));
         renderGrid();
         alert("¡Intercambio completado!");
     } catch (e) {
@@ -101,13 +141,25 @@ window.handleTrade = async (tradeId, action) => {
 };
 
 async function loadAlbum() {
+    const cached = localStorage.getItem(storageKey);
+    if (cached) {
+        userStickers = JSON.parse(cached);
+        renderGrid();
+    } else {
+        renderGrid();
+    }
+
     const docRef = doc(db, "albums", userId);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-        userStickers = docSnap.data().stickers || {};
+        const remoteStickers = docSnap.data().stickers || {};
+        if (JSON.stringify(remoteStickers) !== JSON.stringify(userStickers)) {
+            userStickers = remoteStickers;
+            localStorage.setItem(storageKey, JSON.stringify(userStickers));
+            renderGrid();
+        }
     }
-    renderGrid();
 }
 
 function updateCounters() {
@@ -116,13 +168,46 @@ function updateCounters() {
     document.getElementById('missingCount').innerText = totalStickers - collected;
 }
 
+function updatePaginationUI() {
+    const teamCode = pages[currentPageIndex].trim();
+    const fullName = countryNames[teamCode] || teamCode;
+
+    if (teamCode === "FWC" || teamCode === "CC") {
+        pageTitle.innerHTML = fullName;
+    } else {
+        pageTitle.innerHTML = `<img src="https://api.fifa.com/api/v3/picture/flags-sq-4/${teamCode}" class="team-flag"> ${fullName}`;
+    }
+
+    prevPageBtn.disabled = currentPageIndex === 0;
+    nextPageBtn.disabled = currentPageIndex === pages.length - 1;
+    
+    prevPageBtn.style.opacity = currentPageIndex === 0 ? '0.5' : '1';
+    nextPageBtn.style.opacity = currentPageIndex === pages.length - 1 ? '0.5' : '1';
+}
+
+prevPageBtn.addEventListener('click', () => {
+    if (currentPageIndex > 0) {
+        currentPageIndex--;
+        renderGrid();
+    }
+});
+
+nextPageBtn.addEventListener('click', () => {
+    if (currentPageIndex < pages.length - 1) {
+        currentPageIndex++;
+        renderGrid();
+    }
+});
+
 function renderGrid() {
     const grid = document.getElementById('stickerGrid');
     grid.innerHTML = '';
     const fragment = document.createDocumentFragment();
+    const currentPagePrefix = pages[currentPageIndex];
 
-    for (let i = 1; i <= totalStickers; i++) {
-        const stickerId = i.toString();
+    const stickersInThisPage = stickerIds.filter(id => id.startsWith(currentPagePrefix));
+
+    stickersInThisPage.forEach(stickerId => {
         const count = userStickers[stickerId] || 0;
 
         const div = document.createElement('div');
@@ -141,9 +226,10 @@ function renderGrid() {
 
         div.addEventListener('click', () => updateSticker(stickerId));
         fragment.appendChild(div);
-    }
+    });
 
     grid.appendChild(fragment);
+    updatePaginationUI();
     updateCounters();
     applyFilter(currentFilter);
 }
@@ -169,8 +255,9 @@ function applyFilter(filter) {
     if (filter === 'missing') document.getElementById('filterMissing').classList.add('active');
     if (filter === 'extras') document.getElementById('filterExtras').classList.add('active');
 
-    for (let i = 1; i <= totalStickers; i++) {
-        const stickerId = i.toString();
+    const currentPagePrefix = pages[currentPageIndex];
+    for (let i = 1; i <= 20; i++) {
+        const stickerId = `${currentPagePrefix}${i}`;
         const count = userStickers[stickerId] || 0;
         const div = document.getElementById(`sticker-${stickerId}`);
         if (div) updateVisibility(div, count);
@@ -192,12 +279,11 @@ function updateStickerUI(stickerId, count) {
         div.classList.remove('owned');
     }
 
-    // Cambia el selector aquí también
     let badge = div.querySelector('.sticker-badge'); 
     if (count > 1) {
         if (!badge) {
             badge = document.createElement('div');
-            badge.className = 'sticker-badge'; // Cambiado
+            badge.className = 'sticker-badge';
             div.appendChild(badge);
         }
         badge.innerText = `x${count}`;
@@ -209,6 +295,7 @@ function updateStickerUI(stickerId, count) {
 }
 
 function queueSync() {
+    localStorage.setItem(storageKey, JSON.stringify(userStickers));
     if (syncTimeout) clearTimeout(syncTimeout);
     syncTimeout = setTimeout(() => {
         const docRef = doc(db, "albums", userId);
@@ -245,23 +332,36 @@ async function removeSticker(stickerId) {
 const searchInput = document.getElementById('searchInput');
 
 searchInput.addEventListener('input', (e) => {
-    const value = e.target.value;
+    const value = e.target.value.trim().toUpperCase();
 
-    for (let i = 1; i <= totalStickers; i++) {
-        const stickerId = i.toString();
+    if (value === "") {
+        currentPageIndex = 0;
+        renderGrid();
+        return;
+    }
+
+    const matchedSticker = stickerIds.find(id => id.includes(value));
+    if (matchedSticker) {
+        const prefix = matchedSticker.replace(/[0-9]/g, '');
+        const index = pages.indexOf(prefix);
+        
+        if (index !== -1 && currentPageIndex !== index) {
+            currentPageIndex = index;
+            renderGrid();
+        }
+    }
+
+    const currentPagePrefix = pages[currentPageIndex];
+    for (let i = 1; i <= 20; i++) {
+        const stickerId = `${currentPagePrefix}${i}`;
         const div = document.getElementById(`sticker-${stickerId}`);
-
         if (!div) continue;
 
-        if (value === "") {
+        if (stickerId.includes(value)) {
             const count = userStickers[stickerId] || 0;
             updateVisibility(div, count);
         } else {
-            if (stickerId === value) {
-                div.style.display = 'flex';
-            } else {
-                div.style.display = 'none';
-            }
+            div.style.display = 'none';
         }
     }
 });
@@ -270,9 +370,12 @@ const quickAddInput = document.getElementById('quickAddInput');
 const quickAddBtn = document.getElementById('quickAddBtn');
 
 function handleQuickAdd() {
-    const num = quickAddInput.value;
-    if (num >= 1 && num <= totalStickers) {
-        updateSticker(num.toString());
+    let val = quickAddInput.value.trim().toUpperCase();
+    if (/^\d+$/.test(val)) {
+        val = `${pages[currentPageIndex]}${val}`;
+    }
+    if (stickerIds.includes(val)) {
+        updateSticker(val);
         quickAddInput.value = '';
         quickAddInput.focus();
     }
@@ -283,13 +386,13 @@ quickAddInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') handleQuickAdd();
 });
 
-const quickRemoveInput = document.getElementById('quickRemoveInput');
-const quickRemoveBtn = document.getElementById('quickRemoveBtn');
-
 function handleQuickRemove() {
-    const num = quickRemoveInput.value;
-    if (num >= 1 && num <= totalStickers) {
-        removeSticker(num.toString());
+    let val = quickRemoveInput.value.trim().toUpperCase();
+    if (/^\d+$/.test(val)) {
+        val = `${pages[currentPageIndex]}${val}`;
+    }
+    if (stickerIds.includes(val)) {
+        removeSticker(val);
         quickRemoveInput.value = '';
         quickRemoveInput.focus();
     }
@@ -318,3 +421,81 @@ topBtn.addEventListener("click", () => {
 });
 
 loadAlbum();
+
+
+// Tutorial 
+const tutorialSteps = [
+    { 
+        img: "/images/Frame 1.png", 
+        text: "<b>Navega entre países:</b> Usa las flechas laterales para cambiar de selección rápidamente." 
+    },
+    { 
+        img: "/images/Frame 2.png", 
+        text: "<b>Búsqueda inteligente:</b> Busca por código completo(Ej:<b>MEX 1</b>) o escribe solo el <b>número</b> si ya estás en la página del país." 
+    },
+    { 
+        img: "/images/Frame 3.png", 
+        text: "<b>Añade estampas:</b> Haz clic en la tarjeta o usa el recuadro <b>'Agregar'</b> (acepta código o solo el número)." 
+    },
+    { 
+        img: "/images/Frame 4.png", 
+        text: "<b>Gestiona repetidas:</b> Usa el recuadro <b>'Quitar'</b> para eliminar sobrantes usando el código o el número." 
+    }
+];
+
+let currentTutorialStep = 0;
+
+function updateTutorialUI() {
+    const modal = document.getElementById('tutorialModal');
+    const title = document.getElementById('tutorialTitle');
+    const image = document.getElementById('tutorialImage');
+    const text = document.getElementById('tutorialText');
+    const prevBtn = document.getElementById('prevTutorialBtn');
+    const nextBtn = document.getElementById('nextTutorialBtn');
+    const finishBtn = document.getElementById('closeTutorialBtn');
+
+    title.innerText = `Paso ${currentTutorialStep + 1} de ${tutorialSteps.length}`;
+    image.src = tutorialSteps[currentTutorialStep].img;
+    text.innerHTML = tutorialSteps[currentTutorialStep].text;
+
+    prevBtn.disabled = currentTutorialStep === 0;
+
+    if (currentTutorialStep === tutorialSteps.length - 1) {
+        nextBtn.style.display = 'none';
+        finishBtn.style.display = 'block';
+    } else {
+        nextBtn.style.display = 'block';
+        finishBtn.style.display = 'none';
+    }
+}
+
+function showTutorial() {
+    const tutorialKey = `tutorial_seen_${userId}`;
+    const modal = document.getElementById('tutorialModal');
+
+    if (!localStorage.getItem(tutorialKey)) {
+        modal.style.display = 'flex';
+        updateTutorialUI();
+
+        document.getElementById('prevTutorialBtn').onclick = () => {
+            if (currentTutorialStep > 0) {
+                currentTutorialStep--;
+                updateTutorialUI();
+            }
+        };
+
+        document.getElementById('nextTutorialBtn').onclick = () => {
+            if (currentTutorialStep < tutorialSteps.length - 1) {
+                currentTutorialStep++;
+                updateTutorialUI();
+            }
+        };
+
+        document.getElementById('closeTutorialBtn').onclick = () => {
+            modal.style.display = 'none';
+            localStorage.setItem(tutorialKey, 'true');
+        };
+    }
+}
+
+showTutorial();

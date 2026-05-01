@@ -28,19 +28,20 @@ const countryNames = {
     "AUT": "Austria", "JOR": "Jordania", "POR": "Portugal", "COD": "RD Congo", "UZB": "Uzbekistán", 
     "COL": "Colombia", "ENG": "Inglaterra", "CRO": "Croacia", "GHA": "Ghana", "PAN": "Panamá", "CC": "Coca-Cola Collection"
 };
-const teams = ["MEX ", "RSA ", "KOR ", "CZE ", "CAN ", "BIH ", "QAT ", "SUI ", "BRA ", "MAR ", "HAI ", "SCO ", "USA ", "PAR ", "AUS ", "TUR ", "GER ", "CUW ", "CIV ", "ECU ", "NED ", "JPN ", "SWE ", "TUN ", "BEL ", "EGY ", "IRN ", "NZL ", "ESP ", "CPV ", "KSA ", "URU ", "FRA ", "SEN ", "IRQ ", "NOR ", "ARG ", "ALG ", "AUT ", "JOR ", "POR ", "COD ", "UZB ", "COL ", "ENG ", "CRO ", "GHA ", "PAN "];
-const pages = ["FWC", ...teams, "CC"];
+const teams = ["MEX ", "RSA ", "KOR ", "CZE ", "CAN ", "BIH ", "QAT ", "SUI ", "BRA ", "MAR ", "HAI ", "SCO ", "USA ", "PAR ", "AUS ", "TUR ", "GER ", "CUW ", "CIV ", "ECU ", "NED ", "JPN ", "SWE ", "TUN ", "CC","BEL ", "EGY ", "IRN ", "NZL ", "ESP ", "CPV ", "KSA ", "URU ", "FRA ", "SEN ", "IRQ ", "NOR ", "ARG ", "ALG ", "AUT ", "JOR ", "POR ", "COD ", "UZB ", "COL ", "ENG ", "CRO ", "GHA ", "PAN "];
+const pages = ["FWC", ...teams];
 let currentPageIndex = 0;
 
 const stickerIds = [];
 
 pages.forEach(page => {
     if (page === "CC") {
-        for (let i = 1; i <= 14; i++) {
+        for (let i = 1; i <= 12; i++) {
             stickerIds.push(`${page}${i}`);
         }
     } else if (page === "FWC") {
-        for (let i = 1; i <= 6; i++) {
+        stickerIds.push("00");
+        for (let i = 1; i <= 19; i++) {
             stickerIds.push(`${page}${i}`);
         }
     } else {
@@ -205,7 +206,10 @@ function renderGrid() {
     const fragment = document.createDocumentFragment();
     const currentPagePrefix = pages[currentPageIndex];
 
-    const stickersInThisPage = stickerIds.filter(id => id.startsWith(currentPagePrefix));
+    const stickersInThisPage = stickerIds.filter(id => {
+        if (currentPagePrefix === "FWC" && id === "00") return true;
+        return id.startsWith(currentPagePrefix);
+    });
 
     stickersInThisPage.forEach(stickerId => {
         const count = userStickers[stickerId] || 0;
@@ -256,12 +260,16 @@ function applyFilter(filter) {
     if (filter === 'extras') document.getElementById('filterExtras').classList.add('active');
 
     const currentPagePrefix = pages[currentPageIndex];
-    for (let i = 1; i <= 20; i++) {
-        const stickerId = `${currentPagePrefix}${i}`;
+    const stickersInThisPage = stickerIds.filter(id => {
+        if (currentPagePrefix === "FWC" && id === "00") return true;
+        return id.startsWith(currentPagePrefix);
+    });
+
+    stickersInThisPage.forEach(stickerId => {
         const count = userStickers[stickerId] || 0;
         const div = document.getElementById(`sticker-${stickerId}`);
         if (div) updateVisibility(div, count);
-    }
+    });
 }
 
 document.getElementById('filterAll').addEventListener('click', () => applyFilter('all'));
@@ -342,7 +350,12 @@ searchInput.addEventListener('input', (e) => {
 
     const matchedSticker = stickerIds.find(id => id.includes(value));
     if (matchedSticker) {
-        const prefix = matchedSticker.replace(/[0-9]/g, '');
+        let prefix;
+        if (matchedSticker === "00") {
+            prefix = "FWC";
+        } else {
+            prefix = matchedSticker.replace(/[0-9]/g, '');
+        }
         const index = pages.indexOf(prefix);
         
         if (index !== -1 && currentPageIndex !== index) {
@@ -352,10 +365,14 @@ searchInput.addEventListener('input', (e) => {
     }
 
     const currentPagePrefix = pages[currentPageIndex];
-    for (let i = 1; i <= 20; i++) {
-        const stickerId = `${currentPagePrefix}${i}`;
+    const stickersInThisPage = stickerIds.filter(id => {
+        if (currentPagePrefix === "FWC" && id === "00") return true;
+        return id.startsWith(currentPagePrefix);
+    });
+
+    stickersInThisPage.forEach(stickerId => {
         const div = document.getElementById(`sticker-${stickerId}`);
-        if (!div) continue;
+        if (!div) return;
 
         if (stickerId.includes(value)) {
             const count = userStickers[stickerId] || 0;
@@ -363,7 +380,7 @@ searchInput.addEventListener('input', (e) => {
         } else {
             div.style.display = 'none';
         }
-    }
+    });
 });
 
 const quickAddInput = document.getElementById('quickAddInput');
@@ -371,6 +388,12 @@ const quickAddBtn = document.getElementById('quickAddBtn');
 
 function handleQuickAdd() {
     let val = quickAddInput.value.trim().toUpperCase();
+    if (stickerIds.includes(val)) {
+        updateSticker(val);
+        quickAddInput.value = '';
+        quickAddInput.focus();
+        return;
+    }
     if (/^\d+$/.test(val)) {
         val = `${pages[currentPageIndex]}${val}`;
     }
@@ -388,6 +411,12 @@ quickAddInput.addEventListener('keypress', (e) => {
 
 function handleQuickRemove() {
     let val = quickRemoveInput.value.trim().toUpperCase();
+    if (stickerIds.includes(val)) {
+        removeSticker(val);
+        quickRemoveInput.value = '';
+        quickRemoveInput.focus();
+        return;
+    }
     if (/^\d+$/.test(val)) {
         val = `${pages[currentPageIndex]}${val}`;
     }

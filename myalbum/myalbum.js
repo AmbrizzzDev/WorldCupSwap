@@ -165,8 +165,17 @@ async function loadAlbum() {
 
 function updateCounters() {
     const collected = Object.keys(userStickers).length;
+    let duplicates = 0;
+    
+    for (const key in userStickers) {
+        if (userStickers[key] > 1) {
+            duplicates += (userStickers[key] - 1);
+        }
+    }
+    
     document.getElementById('ownedCount').innerText = collected;
     document.getElementById('missingCount').innerText = totalStickers - collected;
+    document.getElementById('duplicatesCount').innerText = duplicates;
 }
 
 function updatePaginationUI() {
@@ -204,16 +213,29 @@ function renderGrid() {
     const grid = document.getElementById('stickerGrid');
     grid.innerHTML = '';
     const fragment = document.createDocumentFragment();
-    const currentPagePrefix = pages[currentPageIndex];
 
-    const stickersInThisPage = stickerIds.filter(id => {
-        if (currentPagePrefix === "FWC" && id === "00") return true;
-        return id.startsWith(currentPagePrefix);
-    });
+    let stickersToRender = [];
 
-    stickersInThisPage.forEach(stickerId => {
+    if (currentFilter === 'all') {
+        const currentPagePrefix = pages[currentPageIndex];
+        stickersToRender = stickerIds.filter(id => {
+            if (currentPagePrefix === "FWC" && id === "00") return true;
+            return id.startsWith(currentPagePrefix);
+        });
+        document.querySelector('.pagination').style.display = 'flex';
+    } else {
+        document.querySelector('.pagination').style.display = 'none';
+        stickersToRender = stickerIds.filter(id => {
+            const count = userStickers[id] || 0;
+            if (currentFilter === 'missing') return count === 0;
+            if (currentFilter === 'owned') return count > 0;
+            if (currentFilter === 'extras') return count > 1;
+            return true;
+        });
+    }
+
+    stickersToRender.forEach(stickerId => {
         const count = userStickers[stickerId] || 0;
-
         const div = document.createElement('div');
         div.className = 'sticker';
         div.id = `sticker-${stickerId}`;
@@ -233,21 +255,11 @@ function renderGrid() {
     });
 
     grid.appendChild(fragment);
-    updatePaginationUI();
-    updateCounters();
-    applyFilter(currentFilter);
-}
-
-function updateVisibility(div, count) {
-    if (currentFilter === 'missing' && count > 0) {
-        div.style.display = 'none';
-    } else if (currentFilter === 'extras' && count <= 1) {
-        div.style.display = 'none';
-    } else if (currentFilter === 'owned' && count === 0) {
-        div.style.display = 'none';
-    } else {
-        div.style.display = 'flex';
+    
+    if (currentFilter === 'all') {
+        updatePaginationUI();
     }
+    updateCounters();
 }
 
 function applyFilter(filter) {
@@ -259,17 +271,14 @@ function applyFilter(filter) {
     if (filter === 'missing') document.getElementById('filterMissing').classList.add('active');
     if (filter === 'extras') document.getElementById('filterExtras').classList.add('active');
 
-    const currentPagePrefix = pages[currentPageIndex];
-    const stickersInThisPage = stickerIds.filter(id => {
-        if (currentPagePrefix === "FWC" && id === "00") return true;
-        return id.startsWith(currentPagePrefix);
-    });
+    const downloadBtn = document.getElementById('downloadBtn');
+    if (filter === 'all') {
+        downloadBtn.style.display = 'none';
+    } else {
+        downloadBtn.style.display = 'inline-block';
+    }
 
-    stickersInThisPage.forEach(stickerId => {
-        const count = userStickers[stickerId] || 0;
-        const div = document.getElementById(`sticker-${stickerId}`);
-        if (div) updateVisibility(div, count);
-    });
+    renderGrid();
 }
 
 document.getElementById('filterAll').addEventListener('click', () => applyFilter('all'));
@@ -277,29 +286,66 @@ document.getElementById('filterOwned').addEventListener('click', () => applyFilt
 document.getElementById('filterMissing').addEventListener('click', () => applyFilter('missing'));
 document.getElementById('filterExtras').addEventListener('click', () => applyFilter('extras'));
 
-function updateStickerUI(stickerId, count) {
-    const div = document.getElementById(`sticker-${stickerId}`);
-    if (!div) return;
-
-    if (count > 0) {
-        div.classList.add('owned');
-    } else {
-        div.classList.remove('owned');
-    }
-
-    let badge = div.querySelector('.sticker-badge'); 
-    if (count > 1) {
-        if (!badge) {
-            badge = document.createElement('div');
-            badge.className = 'sticker-badge';
-            div.appendChild(badge);
+document.getElementById('downloadBtn').addEventListener('click', () => {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    let items = [];
+    stickerIds.forEach(id => {
+        const count = userStickers[id] || 0;
+        
+        if (currentFilter === 'missing' && count === 0) {
+            items.push(id);
         }
-        badge.innerText = `x${count}`;
-    } else if (badge) {
-        badge.remove();
+        
+        if (currentFilter === 'owned' && count > 0) {
+            if (count === 1) {
+                items.push(id);
+            } else {
+                items.push(`${id} (x${count})`);
+            }
+        }
+        
+        if (currentFilter === 'extras' && count > 1) {
+            const extraCount = count - 1;
+            if (extraCount === 1) {
+                items.push(id);
+            } else {
+                items.push(`${id} (x${extraCount})`);
+            }
+        }
+    });
+
+    const columnas = 8;
+    let tableData = [];
+    for (let i = 0; i < items.length; i += columnas) {
+        let fila = items.slice(i, i + columnas);
+        while (fila.length < columnas) fila.push(""); 
+        tableData.push(fila);
     }
 
-    updateVisibility(div, count);
+    const titulos = {
+        'owned': 'Estampas Obtenidas',
+        'missing': 'Estampas Faltantes',
+        'extras': 'Estampas Sobrantes'
+    };
+
+    doc.setFontSize(16);
+    doc.text(titulos[currentFilter] || 'Lista de Estampas', 14, 15);
+
+    doc.autoTable({
+        startY: 20,
+        body: tableData,
+        theme: 'grid',
+        styles: { halign: 'center', valign: 'middle', fontSize: 9, minCellHeight: 12 },
+        margin: { left: 10, right: 10 }
+    });
+    
+    doc.save(`WorldCupSwap_${currentFilter}.pdf`);
+});
+
+function updateStickerUI(stickerId, count) {
+    renderGrid();
 }
 
 function queueSync() {
@@ -342,45 +388,54 @@ const searchInput = document.getElementById('searchInput');
 searchInput.addEventListener('input', (e) => {
     const value = e.target.value.trim().toUpperCase();
 
-    if (value === "") {
-        currentPageIndex = 0;
-        renderGrid();
-        return;
-    }
-
-    const matchedSticker = stickerIds.find(id => id.includes(value));
-    if (matchedSticker) {
-        let prefix;
-        if (matchedSticker === "00") {
-            prefix = "FWC";
-        } else {
-            prefix = matchedSticker.replace(/[0-9]/g, '');
-        }
-        const index = pages.indexOf(prefix);
-        
-        if (index !== -1 && currentPageIndex !== index) {
-            currentPageIndex = index;
+    if (currentFilter === 'all') {
+        if (value === "") {
+            currentPageIndex = 0;
             renderGrid();
+            return;
         }
+
+        const matchedSticker = stickerIds.find(id => id.includes(value));
+        if (matchedSticker) {
+            let prefix;
+            if (matchedSticker === "00") {
+                prefix = "FWC";
+            } else {
+                prefix = matchedSticker.replace(/[0-9]/g, '');
+            }
+            const index = pages.indexOf(prefix);
+            
+            if (index !== -1 && currentPageIndex !== index) {
+                currentPageIndex = index;
+                renderGrid();
+            }
+        }
+
+        const currentPagePrefix = pages[currentPageIndex];
+        const stickersInThisPage = stickerIds.filter(id => {
+            if (currentPagePrefix === "FWC" && id === "00") return true;
+            return id.startsWith(currentPagePrefix);
+        });
+
+        stickersInThisPage.forEach(stickerId => {
+            const div = document.getElementById(`sticker-${stickerId}`);
+            if (!div) return;
+
+            if (stickerId.includes(value)) {
+                div.style.display = 'flex';
+            } else {
+                div.style.display = 'none';
+            }
+        });
+    } else {
+        document.querySelectorAll('.sticker').forEach(div => {
+            if (div.id.replace('sticker-', '').includes(value)) {
+                div.style.display = 'flex';
+            } else {
+                div.style.display = 'none';
+            }
+        });
     }
-
-    const currentPagePrefix = pages[currentPageIndex];
-    const stickersInThisPage = stickerIds.filter(id => {
-        if (currentPagePrefix === "FWC" && id === "00") return true;
-        return id.startsWith(currentPagePrefix);
-    });
-
-    stickersInThisPage.forEach(stickerId => {
-        const div = document.getElementById(`sticker-${stickerId}`);
-        if (!div) return;
-
-        if (stickerId.includes(value)) {
-            const count = userStickers[stickerId] || 0;
-            updateVisibility(div, count);
-        } else {
-            div.style.display = 'none';
-        }
-    });
 });
 
 const quickAddInput = document.getElementById('quickAddInput');
@@ -408,6 +463,9 @@ quickAddBtn.addEventListener('click', handleQuickAdd);
 quickAddInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') handleQuickAdd();
 });
+
+const quickRemoveInput = document.getElementById('quickRemoveInput');
+const quickRemoveBtn = document.getElementById('quickRemoveBtn');
 
 function handleQuickRemove() {
     let val = quickRemoveInput.value.trim().toUpperCase();
@@ -451,8 +509,6 @@ topBtn.addEventListener("click", () => {
 
 loadAlbum();
 
-
-// Tutorial 
 const tutorialSteps = [
     { 
         img: "/images/Frame 1.png", 

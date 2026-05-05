@@ -36,7 +36,7 @@ const stickerIds = [];
 
 pages.forEach(page => {
     if (page === "CC") {
-        for (let i = 1; i <= 12; i++) {
+        for (let i = 1; i <= 14; i++) {
             stickerIds.push(`${page}${i}`);
         }
     } else if (page === "FWC") {

@@ -287,7 +287,13 @@ document.getElementById('filterMissing').addEventListener('click', () => applyFi
 document.getElementById('filterExtras').addEventListener('click', () => applyFilter('extras'));
 
 document.getElementById('downloadBtn').addEventListener('click', () => {
-    const { jsPDF } = window.jspdf;
+    const jsPDF = window.jspdf ? window.jspdf.jsPDF : window.jsPDF;
+    
+    if (!jsPDF) {
+        alert("jsPDF library is not loaded properly. Check your HTML.");
+        return;
+    }
+
     const doc = new jsPDF();
     
     let items = [];
